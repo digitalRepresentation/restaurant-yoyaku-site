@@ -14,11 +14,11 @@ public class Restaurant {
         return name;
     }
 
-    public String getInforamation() {
-        return name + " in " + address;
-    }
-
     public String getAddress() {
         return address;
+    }
+
+    public String getInforamation() {
+        return name + " in " + address;
     }
 }
