@@ -19,6 +19,7 @@ public class RestaurantControllerTests {
     @Autowired
     private MockMvc mvc;
 
+    //2020-12-31 金（珍) 追加　レストラン店舗リストのテストコード
     @Test
     public void list() throws Exception {
         mvc.perform(get("/restaurants"))
@@ -31,5 +32,12 @@ public class RestaurantControllerTests {
                 ));
 
         //
+    }
+
+    //2020-12-31 金(珍) レストランdetailテストコード
+    @Test
+    public void detail() throws Exception {
+        mvc.perform(get("/restaurants/1"))
+                .andExpect(status().isOk());
     }
 }

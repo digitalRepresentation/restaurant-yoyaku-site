@@ -11,6 +11,7 @@ import java.util.List;
 @RestController
 public class RestaurantController {
 
+    //2020-12-30 金(珍) 追加　レストラン店舗リスト
     @GetMapping("/restaurants")
     public List<Restaurant> list() {
         List<Restaurant> restaurants = new ArrayList<>();
@@ -19,5 +20,12 @@ public class RestaurantController {
 
         restaurants.add(restaurant);
         return restaurants;
+    }
+
+    //2020-12-30 金(珍) 追加　レストラン店舗リスト詳細
+    @GetMapping("/restaurants/1")
+    public Restaurant detail() {
+        Restaurant restaurant = new Restaurant(1004L, "Bob zip", "Chiba");
+        return restaurant;
     }
 }
