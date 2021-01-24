@@ -30,14 +30,27 @@ public class RestaurantControllerTests {
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
                 ));
-
-        //
     }
 
     //2020-12-31 金(珍) レストランdetailテストコード
     @Test
     public void detail() throws Exception {
-        mvc.perform(get("/restaurants/1"))
-                .andExpect(status().isOk());
+        mvc.perform(get("/restaurants/1004"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"id\":1004")
+                ))
+                .andExpect(content().string(
+                        containsString("\"name\":\"Bob zip\"")
+                ));
+
+        mvc.perform(get("/restaurants/2021"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("\"id\":2021")
+                ))
+                .andExpect(content().string(
+                        containsString("\"name\":\"Cyber Food\"")
+                ));
     }
 }
