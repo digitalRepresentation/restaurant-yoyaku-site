@@ -1,5 +1,7 @@
 package jp.co.jinyoung.restaurant.Interface;
 
+import jp.co.jinyoung.restaurant.domain.MenuItemRepository;
+import jp.co.jinyoung.restaurant.domain.MenuItemRepositoryImpl;
 import jp.co.jinyoung.restaurant.domain.RestaurantRepository;
 import jp.co.jinyoung.restaurant.domain.RestaurantRepositoryImpl;
 import org.junit.Test;
@@ -25,6 +27,9 @@ public class RestaurantControllerTests {
     @SpyBean(RestaurantRepositoryImpl.class)
     private RestaurantRepository restaurantRepositoryImpl;
 
+    @SpyBean(MenuItemRepositoryImpl.class)
+    private MenuItemRepository menuItemRepository;
+
     //2020-12-31 金（珍) 追加　レストラン店舗リストのテストコード
     @Test
     public void list() throws Exception {
@@ -48,7 +53,10 @@ public class RestaurantControllerTests {
                 ))
                 .andExpect(content().string(
                         containsString("\"name\":\"Bob zip\"")
-                ));
+                ))
+        .andExpect(content().string(
+                containsString("Sushi")
+        ));
 
         mvc.perform(get("/restaurants/2021"))
                 .andExpect(status().isOk())
