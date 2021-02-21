@@ -1,5 +1,6 @@
 package jp.co.jinyoung.restaurant.Interface;
 
+import jp.co.jinyoung.restaurant.application.RestaurantService;
 import jp.co.jinyoung.restaurant.domain.MenuItemRepository;
 import jp.co.jinyoung.restaurant.domain.MenuItemRepositoryImpl;
 import jp.co.jinyoung.restaurant.domain.RestaurantRepository;
@@ -23,6 +24,9 @@ public class RestaurantControllerTests {
 
     @Autowired
     private MockMvc mvc;
+
+    @SpyBean(RestaurantService.class)
+    private RestaurantService restaurantService;
 
     @SpyBean(RestaurantRepositoryImpl.class)
     private RestaurantRepository restaurantRepositoryImpl;
