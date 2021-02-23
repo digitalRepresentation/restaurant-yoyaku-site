@@ -1,19 +1,21 @@
 package jp.co.jinyoung.restaurant.Interface;
 
 import jp.co.jinyoung.restaurant.application.RestaurantService;
-import jp.co.jinyoung.restaurant.domain.MenuItemRepository;
-import jp.co.jinyoung.restaurant.domain.MenuItemRepositoryImpl;
-import jp.co.jinyoung.restaurant.domain.RestaurantRepository;
-import jp.co.jinyoung.restaurant.domain.RestaurantRepositoryImpl;
+import jp.co.jinyoung.restaurant.domain.MenuItem;
+import jp.co.jinyoung.restaurant.domain.Restaurant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.core.StringContains.containsString;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -25,38 +27,46 @@ public class RestaurantControllerTests {
     @Autowired
     private MockMvc mvc;
 
-    @SpyBean(RestaurantService.class)
+    @MockBean
     private RestaurantService restaurantService;
-
-    @SpyBean(RestaurantRepositoryImpl.class)
-    private RestaurantRepository restaurantRepositoryImpl;
-
-    @SpyBean(MenuItemRepositoryImpl.class)
-    private MenuItemRepository menuItemRepository;
 
     //2020-12-31 金（珍) 追加　レストラン店舗リストのテストコード
     @Test
     public void list() throws Exception {
+        //Mock Object
+        List<Restaurant> restaurants = new ArrayList<>();
+        restaurants.add(new Restaurant(1004L, "Jinyoung Kim", "Chiba"));
+
+        given(restaurantService.getRestaurants()).willReturn(restaurants);
+
         mvc.perform(get("/restaurants"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"id\":1004")
                 ))
                 .andExpect(content().string(
-                        containsString("\"name\":\"Bob zip\"")
+                        containsString("\"name\":\"Jinyoung Kim\"")
                 ));
     }
 
     //2020-12-31 金(珍) レストランdetailテストコード
     @Test
     public void detail() throws Exception {
+        Restaurant restaurant1 = new Restaurant(1004L, "Chiba Kim", "Tokyo");
+        restaurant1.addMenuItem(new MenuItem("Sushi"));
+
+        Restaurant restaurant2 = new Restaurant(2021L, "Cyber Food", "Chiba");
+
+        given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
+        given(restaurantService.getRestaurant(2021L)).willReturn(restaurant2);
+
         mvc.perform(get("/restaurants/1004"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(
                         containsString("\"id\":1004")
                 ))
                 .andExpect(content().string(
-                        containsString("\"name\":\"Bob zip\"")
+                        containsString("\"name\":\"Chiba Kim\"")
                 ))
         .andExpect(content().string(
                 containsString("Sushi")
