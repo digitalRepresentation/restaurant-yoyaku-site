@@ -1,6 +1,7 @@
 package jp.co.jinyoung.restaurant.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Restaurant {
@@ -24,8 +26,12 @@ public class Restaurant {
 
     private String address;
 
+//    private String regionName; // Tokyo
+//    private String categoryName; // Korean
+//    private String tagNames; // #JMT
+
     @Transient
-    private List<MenuItem> menuItems = new ArrayList<MenuItem>();
+    private List<MenuItem> menuItems;
 
     public Restaurant(String name, String address) {
         this.name = name;
@@ -45,10 +51,14 @@ public class Restaurant {
 
 
     public void addMenuItem(MenuItem menuItem) {
+        if(menuItem == null) {
+            menuItems = new ArrayList<>();
+        }
         menuItems.add(menuItem);
     }
 
     public void setMenuItems(List<MenuItem> menuItems) {
+
         for (MenuItem menuItem : menuItems) {
             addMenuItem(menuItem);
         }
