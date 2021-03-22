@@ -1,9 +1,6 @@
 package jp.co.jinyoung.restaurant.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,29 +17,15 @@ import java.util.List;
 public class Restaurant {
     @Id
     @GeneratedValue
+    @Setter
     private Long id;
 
     private String name;
 
     private String address;
 
-//    private String regionName; // Tokyo
-//    private String categoryName; // Korean
-//    private String tagNames; // #JMT
-
     @Transient
     private List<MenuItem> menuItems;
-
-    public Restaurant(String name, String address) {
-        this.name = name;
-        this.address = address;
-    }
-
-    public Restaurant(Long id, String name, String address) {
-        this.id = id;
-        this.name = name;
-        this.address = address;
-    }
 
 
     public String getInforamation() {
@@ -50,18 +33,8 @@ public class Restaurant {
     }
 
 
-    public void addMenuItem(MenuItem menuItem) {
-        if(menuItem == null) {
-            menuItems = new ArrayList<>();
-        }
-        menuItems.add(menuItem);
-    }
-
     public void setMenuItems(List<MenuItem> menuItems) {
-
-        for (MenuItem menuItem : menuItems) {
-            addMenuItem(menuItem);
-        }
+            this.menuItems = new ArrayList<>(menuItems);
     }
 
 

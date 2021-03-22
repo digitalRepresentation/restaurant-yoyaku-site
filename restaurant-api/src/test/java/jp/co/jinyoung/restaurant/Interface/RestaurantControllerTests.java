@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.StringContains.containsString;
@@ -20,7 +21,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RestaurantController.class)
@@ -37,7 +39,11 @@ public class RestaurantControllerTests {
     public void list() throws Exception {
         //Mock Object
         List<Restaurant> restaurants = new ArrayList<>();
-        restaurants.add(new Restaurant(1004L, "Jinyoung Kim", "Chiba"));
+        restaurants.add(Restaurant.builder()
+                .id(1004L)
+                .name("Jinyoung Kim")
+                .address("Chiba")
+                .build());
 
         given(restaurantService.getRestaurants()).willReturn(restaurants);
 
@@ -54,10 +60,23 @@ public class RestaurantControllerTests {
     //2020-12-31 金(珍) レストランdetailテストコード
     @Test
     public void detail() throws Exception {
-        Restaurant restaurant1 = new Restaurant(1004L, "Chiba Kim", "Tokyo");
-        restaurant1.addMenuItem(new MenuItem("Sushi"));
+        Restaurant restaurant1 = Restaurant.builder()
+                .id(1004L)
+                .name("Chiba Kim")
+                .address("Tokyo")
+                .build();
 
-        Restaurant restaurant2 = new Restaurant(2021L, "Cyber Food", "Chiba");
+        MenuItem menuItem = MenuItem.builder()
+                .name("Sushi")
+                .build();
+
+        restaurant1.setMenuItems(Arrays.asList(menuItem));
+
+        Restaurant restaurant2 = Restaurant.builder()
+                .id(2021L)
+                .name("Cyber Food")
+                .address("Chiba")
+                .build();
 
         given(restaurantService.getRestaurant(1004L)).willReturn(restaurant1);
         given(restaurantService.getRestaurant(2021L)).willReturn(restaurant2);
@@ -87,7 +106,15 @@ public class RestaurantControllerTests {
 
     @Test
     public void create() throws Exception {
-        Restaurant restaurant = new Restaurant(1234L, "Samgyopsal", "matsudo");
+        given(restaurantService.addRestaurant(any())).will(invoction -> {
+            Restaurant restaurant = invoction.getArgument(0);
+            return Restaurant.builder()
+                    .id(1234L)
+                    .name("Samgyopsal")
+                    .address("matsudo")
+                    .build();
+        });
+
 
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
