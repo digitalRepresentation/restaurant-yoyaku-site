@@ -21,8 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(RestaurantController.class)
@@ -105,13 +104,13 @@ public class RestaurantControllerTests {
 
 
     @Test
-    public void create() throws Exception {
+    public void createWithValidData() throws Exception {
         given(restaurantService.addRestaurant(any())).will(invoction -> {
             Restaurant restaurant = invoction.getArgument(0);
             return Restaurant.builder()
                     .id(1234L)
-                    .name("Samgyopsal")
-                    .address("matsudo")
+                    .name(restaurant.getName())
+                    .address(restaurant.getAddress())
                     .build();
         });
 
@@ -120,10 +119,27 @@ public class RestaurantControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"name\":\"Samgyopsal\", \"address\":\"matsudo\"}"))
                 .andExpect(status().isCreated())
-                //.andExpect(header().string("location", "/restaurants/1234"))
+                .andExpect(header().string("location", "/restaurants/1234"))
                 .andExpect(content().string("{}"));
 
         verify(restaurantService).addRestaurant(any());
+    }
+
+    @Test
+    public void createWithInvalidData() throws Exception {
+        given(restaurantService.addRestaurant(any())).will(invoction -> {
+            Restaurant restaurant = invoction.getArgument(0);
+            return Restaurant.builder()
+                    .id(1234L)
+                    .name(restaurant.getName())
+                    .address(restaurant.getAddress())
+                    .build();
+        });
+
+        mvc.perform(post("/restaurants")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"name\":\"\", \"address\":\"\"}"))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
