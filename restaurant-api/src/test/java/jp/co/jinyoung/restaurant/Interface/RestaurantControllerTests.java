@@ -138,7 +138,8 @@ public class RestaurantControllerTests {
 
         mvc.perform(post("/restaurants")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"name\":\"\", \"address\":\"\"}"))
+                //.content("{\"name\":\"\", \"address\":\"\"}"))
+                .content(""))
                 .andExpect(status().isBadRequest());
     }
 
